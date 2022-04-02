@@ -14,7 +14,7 @@ shader Cross(
     int invert  = 0
         [[string widget = "checkBox",]],
 
-    output color resultF = 0)
+    output float resultF = 0
 {
 
   float crossMin = cross_position - cross_width;
