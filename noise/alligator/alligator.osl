@@ -106,6 +106,7 @@ shader Alligator
     float attenuation = 1.0
         [[ string label = "Falloff" ]],
 
+    output color resultRGB = 0.0,
     output float resultF = 0.0
 ) {
     point objectPosition = transform("object", P);
@@ -116,5 +117,6 @@ shader Alligator
     noiseValue = 0.5 * noiseValue + 0.5;
     noiseValue = pow(noiseValue, attenuation);
 
+    resultRGB = color(noiseValue);
     resultF = float(noiseValue);
 }
