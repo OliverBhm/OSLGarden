@@ -109,13 +109,9 @@ shader Alligator
     output color resultRGB = 0.0,
     output float resultF = 0.0
 ) {
-    point objectPosition = transform("object", P);
-    point startPosition = frequency * objectPosition - offset;
 
-    float noiseValue = fractalAlligatorNoise3D(startPosition, lacunarity, gain, octaves);
-
-    noiseValue = 0.5 * noiseValue + 0.5;
-    noiseValue = pow(noiseValue, attenuation);
+    float noiseValue = fractalAlligatorNoise3D(frequency * transform("object", P) - offset, lacunarity, gain, octaves);
+    noiseValue = pow(0.5 * noiseValue + 0.5, attenuation);
 
     resultRGB = color(noiseValue);
     resultF = float(noiseValue);
