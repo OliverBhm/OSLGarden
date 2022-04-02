@@ -1,3 +1,5 @@
+![alligator_examples](https://user-images.githubusercontent.com/18196695/161399015-a26de74d-4a0f-4bbe-847d-e8da2d4fed96.jpg)
+
 # Alligator Noise
 
 A 3d Fractal Alligator noise
