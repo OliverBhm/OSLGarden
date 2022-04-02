@@ -5,17 +5,27 @@ shader Cross(
     float t = 0
         [[int lockgeom = 0, string widget = "null",]],
 
-    color cross_color = 1,
+    color cross_color = 1
+    [[ string label = "Cross color" ]],
 
-    float cross_position   = 0.5,
-    float cross_width = 0.1,
+    float cross_position   = 0.5
+    [[ string label = "Cross position" ]],
 
-    color stand_color = 0,
-    float stand_position = 0.5,
-    float stand_width = 0.1,
+    float cross_width = 0.1
+      [[ string label = "Cross width" ]],
+
+    color stand_color = 0
+      [[ string label = "Stand color" ]],
+
+    float stand_position = 0.5
+      [[ string label = "Stand position" ]],
+
+    float stand_width = 0.1
+      [[ string label = "Stand position" ]],
 
     int invert  = 0
-        [[string widget = "checkBox",]],
+    [[string widget="checkBox",
+      string label="Invert"]],
 
     output color resultRGB = 1,
     output float resultF = 0.0
