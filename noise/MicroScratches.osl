@@ -1,0 +1,89 @@
+#define DIVISION 40
+#define DEBUG(_) Cf=_; return;
+float line(point p, float direction, float width){
+    float theta = direction * M_PI;
+    float k = tan(theta);
+    float distance = abs(k * p[0] - p[1])/sqrt(k * k + 1);
+    return 1 - step(width*0.5, distance);
+}
+
+/// Adapted from:
+/// https://github.com/cuckon/scratched
+/// with some more sensible names
+shader MicroScratches(
+	float density=0.1
+  [[ string label = "Density" ]],
+
+  float roughness_min=0.0
+    [[ string label = "Roughness min" ]],
+
+	float roughness_max=0.01
+    [[ string label = "Roughness max" ]],
+
+  float roughness_default = 0.1
+    [[ string label = "Roughness default" ]],
+
+  float anisotropic_min = 0.1
+    [[ string label = "Anisotropic min" ]],
+
+  float anisotropic_max = 0.2
+    [[ string label = "Anisotropic max" ]],
+
+  float anisotropic_default = 0
+    [[ string label = "Anisotropic default" ]],
+
+  float width=0.001
+    [[ string label = "Width" ]],
+
+  float offset=0.0
+    [[ string label = "Offset" ]],
+
+  output float resultRoughness = 0,
+  output float resultAnisotropyAmount = 0,
+  output float resultAnisotropyDirection = 0
+
+){
+    float delta = 1.0/(DIVISION - 1);
+    float max_radius = sqrt(density);
+    int max_search_cell = (int)ceil(max_radius/delta);
+    point index = point(round(u/delta), round(v/delta), 0.0);
+    point shading_p = point(u, v , 0.0);
+    point current_index;
+
+    point current_origin_p;
+    float scratch = 0, direction=0;
+    float roughness = roughness_default, anisotropic = anisotropic_default;
+    for (int x = -max_search_cell; x <= max_search_cell; ++x){
+        for (int y = -max_search_cell; y <= max_search_cell; ++y){
+            current_index = index + point(x, y, 0);
+
+            current_origin_p = (current_index + (hashnoise(current_index) - 0.5)) * delta;
+            direction = hashnoise(current_index + vector(123, 456, 0));
+            scratch = line(
+            	current_origin_p - shading_p,
+            	direction,
+            	width * hashnoise(current_index)
+            );
+            if (scratch)
+            {
+            	roughness = roughness_default + mix(
+            		roughness_min,
+            		roughness_max,
+            		hashnoise(current_index + vector(123, 456, 1))
+            	);
+                anisotropic = anisotropic_default + mix(
+                	anisotropic_min,
+                	anisotropic_max,
+                	hashnoise(current_index + vector(123, 456, 2))
+                );
+                break;
+            }
+        }
+        if (scratch)
+            break;
+    }
+
+    resultRoughness = roughness;
+    resultAnisotropyAmount = (direction * 0.5 + offset) * (scratch > 1e-4);
+    resultAnisotropyDirection = anisotropic;
+}
