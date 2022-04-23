@@ -82,8 +82,8 @@ shader MicroScratches(
         if (scratch)
             break;
     }
-
+    
     resultRoughness = roughness;
-    resultAnisotropyAmount = (direction * 0.5 + offset) * (scratch > 1e-4);
-    resultAnisotropyDirection = anisotropic;
+    resultAnisotropyAmount = anisotropic;
+    resultAnisotropyDirection = (direction * 0.5 + offset) * (scratch > 1e-4);
 }
